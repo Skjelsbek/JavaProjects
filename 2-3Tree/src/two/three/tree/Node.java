@@ -50,13 +50,13 @@ public class Node<T extends Comparable<T>> {
                     this.leftChild = tmpNode.farRightChild;
                 }
 
-            } else if (leftChild != null && data.compareTo(xKey) >= 0 && data.compareTo(yKey) < 0) {                
-                
+            } else if (leftChild != null && data.compareTo(xKey) >= 0 && data.compareTo(yKey) < 0) {
+
                 tmpNode = leftChild.insert(data);
                 if (tmpNode != leftChild) {
                     zKey = yKey;
                     yKey = tmpNode.yKey;
-                    
+
                     this.leftChild = tmpNode.farLeftChild;
                     if (this.rightChild != null) {
                         this.farRightChild = this.rightChild;
@@ -64,11 +64,11 @@ public class Node<T extends Comparable<T>> {
                     this.rightChild = tmpNode.farRightChild;
                 }
 
-            } else if (farRightChild != null && data.compareTo(yKey) >= 0) {                
+            } else if (farRightChild != null && data.compareTo(yKey) >= 0) {
                 tmpNode = farRightChild.insert(data);
                 if (tmpNode != farRightChild) {
                     zKey = tmpNode.yKey;
-                    
+
                     this.farRightChild = tmpNode.farRightChild;
                     if (this.rightChild != null) {
                         if (this.leftChild != null) {
@@ -78,7 +78,7 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.rightChild = tmpNode.farLeftChild;
                 }
-                
+
             } else if (data.compareTo(yKey) < 0) {
                 if (data.compareTo(xKey) >= 0) {
                     zKey = yKey;
@@ -92,11 +92,11 @@ public class Node<T extends Comparable<T>> {
                 zKey = data;
             }
         } else if (yKey != null && xKey == null && zKey != null) {
-            if (farLeftChild != null && data.compareTo(yKey) < 0) {                
+            if (farLeftChild != null && data.compareTo(yKey) < 0) {
                 tmpNode = farLeftChild.insert(data);
                 if (tmpNode != farLeftChild) {
                     xKey = tmpNode.yKey;
-                    
+
                     this.farLeftChild = tmpNode.farLeftChild;
                     if (this.leftChild != null) {
                         if (this.rightChild != null) {
@@ -106,7 +106,7 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.leftChild = tmpNode.farRightChild;
                 }
-            } else if (leftChild != null && data.compareTo(yKey) >= 0 && data.compareTo(zKey) < 0) {  
+            } else if (leftChild != null && data.compareTo(yKey) >= 0 && data.compareTo(zKey) < 0) {
                 tmpNode = leftChild.insert(data);
                 if (tmpNode != leftChild) {
                     xKey = yKey;
@@ -117,7 +117,7 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.rightChild = tmpNode.farRightChild;
                 }
-            } else if (rightChild != null && data.compareTo(yKey) >= 0 && data.compareTo(zKey) < 0) {  
+            } else if (rightChild != null && data.compareTo(yKey) >= 0 && data.compareTo(zKey) < 0) {
                 tmpNode = rightChild.insert(data);
                 if (tmpNode != rightChild) {
                     xKey = yKey;
@@ -128,7 +128,7 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.leftChild = tmpNode.farLeftChild;
                 }
-            } else if (farRightChild != null && data.compareTo(zKey) >= 0) {                                
+            } else if (farRightChild != null && data.compareTo(zKey) >= 0) {
                 tmpNode = farRightChild.insert(data);
                 if (tmpNode != farRightChild) {
                     xKey = yKey;
@@ -157,7 +157,7 @@ public class Node<T extends Comparable<T>> {
 
         if (yKey != null && xKey != null && zKey != null) {
             Integer testInt = new Integer(5);
-            if (data.compareTo((T)testInt) == 0){
+            if (data.compareTo((T) testInt) == 0) {
                 System.out.println("Den kommer inn her");
             }
             tmpNode = new Node(yKey);
@@ -171,26 +171,45 @@ public class Node<T extends Comparable<T>> {
         }
         return this;
     }
-    
-    public void infix(){
-        if (farLeftChild != null){
+
+    public void infix() {
+        if (farLeftChild != null) {
             farLeftChild.infix();
         }
-        if (xKey != null){
+        if (xKey != null) {
             System.out.println(xKey);
         }
-        if (leftChild != null){
+        if (leftChild != null) {
             leftChild.infix();
         }
         System.out.println(yKey);
-        if (rightChild != null){
+        if (rightChild != null) {
             rightChild.infix();
         }
-        if (zKey != null){
+        if (zKey != null) {
             System.out.println(zKey);
         }
-        if (farRightChild != null){
+        if (farRightChild != null) {
             farRightChild.infix();
         }
+    }
+
+    public boolean search(T data) {
+        if (yKey == data) {
+            return true;
+        } else if (xKey == data) {
+            return true;
+        } else if (zKey == data) {
+            return true;
+        } else if (xKey != null && data.compareTo(xKey) < 0 && farLeftChild != null) {
+            return farLeftChild.search(data);
+        } else if (yKey != null && data.compareTo(yKey) < 0 && leftChild != null) {
+            return leftChild.search(data);
+        } else if (zKey != null && data.compareTo(zKey) < 0 && rightChild != null) {
+            return rightChild.search(data);
+        } else if (farRightChild != null) {
+            return farRightChild.search(data);
+        }
+        return false;
     }
 }

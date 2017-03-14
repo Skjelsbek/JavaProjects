@@ -2,17 +2,27 @@ package two.three.tree;
 
 public class TwoThreeTree<T extends Comparable<T>> {
 
-    Node<T> root;
+    private Node<T> root;
 
     public TwoThreeTree(T data) {
         this.root = new Node(data);
     }
 
-    void insert(T data) {
+    public void insert(T data) {
         root = root.insert(data);
     }
-    
-    void infix() {
+
+    public String search(T data) {
+        if (root == null) {
+            return "The tree is empty!";
+        }
+        if (root.search(data) == true) {
+            return data.toString() + " found.";
+        }
+        return data.toString() + " not found!";
+    }
+
+    public void infix() {
         if (root == null) {
             System.out.println("The tree is empty");
         } else {

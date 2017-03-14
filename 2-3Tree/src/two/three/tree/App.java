@@ -12,7 +12,12 @@ public class App {
         for (int i = 0; i < 10; i++) {
             ttt.insert(rnd.nextInt(100) + 1);
         }
+        
+        ttt.insert(8);
+        
         System.out.println("\nTraversering: ");
         ttt.infix();
+        
+        System.out.println(ttt.search(8));
     }
 }
