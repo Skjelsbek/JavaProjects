@@ -10,7 +10,7 @@ public class Node<T extends Comparable<T>> {
     }
 
     public Node<T> insert(T data) {
-        if (yKey != null && xKey == null && zKey == null) {
+        if (xKey == null && zKey == null) {
             if (farLeftChild != null && data.compareTo(yKey) < 0) {
                 tmpNode = farLeftChild.insert(data);
                 if (tmpNode != farLeftChild) {
@@ -32,7 +32,7 @@ public class Node<T extends Comparable<T>> {
             } else {
                 zKey = data;
             }
-        } else if (yKey != null && xKey != null && zKey == null) {
+        } else if (xKey != null && zKey == null) {
             if (farLeftChild != null && data.compareTo(xKey) < 0) {
                 tmpNode = farLeftChild.insert(data);
                 if (tmpNode != farLeftChild) {
@@ -91,7 +91,7 @@ public class Node<T extends Comparable<T>> {
             } else {
                 zKey = data;
             }
-        } else if (yKey != null && xKey == null && zKey != null) {
+        } else if (xKey == null && zKey != null) {
             if (farLeftChild != null && data.compareTo(yKey) < 0) {
                 tmpNode = farLeftChild.insert(data);
                 if (tmpNode != farLeftChild) {
@@ -155,11 +155,7 @@ public class Node<T extends Comparable<T>> {
             }
         }
 
-        if (yKey != null && xKey != null && zKey != null) {
-            Integer testInt = new Integer(5);
-            if (data.compareTo((T) testInt) == 0) {
-                System.out.println("Den kommer inn her");
-            }
+        if (xKey != null && zKey != null) {
             tmpNode = new Node(yKey);
             tmpNode.farLeftChild = new Node(xKey);
             tmpNode.farRightChild = new Node(zKey);
@@ -201,14 +197,36 @@ public class Node<T extends Comparable<T>> {
             return true;
         } else if (zKey == data) {
             return true;
-        } else if (xKey != null && data.compareTo(xKey) < 0 && farLeftChild != null) {
-            return farLeftChild.search(data);
-        } else if (yKey != null && data.compareTo(yKey) < 0 && leftChild != null) {
-            return leftChild.search(data);
-        } else if (zKey != null && data.compareTo(zKey) < 0 && rightChild != null) {
-            return rightChild.search(data);
-        } else if (farRightChild != null) {
-            return farRightChild.search(data);
+        } else if (xKey == null && zKey == null) {
+            if (data.compareTo(yKey) < 0 && farLeftChild != null) {
+                return farLeftChild.search(data);
+            } else if (data.compareTo(yKey) >= 0 && farRightChild != null) {
+                return farRightChild.search(data);
+            }
+        } else if (xKey != null && zKey == null) {
+            if (data.compareTo(xKey) < 0 && farLeftChild != null) {
+                return farLeftChild.search(data);
+            } else if (data.compareTo(yKey) < 0 && leftChild != null) {
+                return leftChild.search(data);
+            } else if (data.compareTo(yKey) >= 0) {
+                if (rightChild != null) {
+                    return rightChild.search(data);
+                } else if (farRightChild != null) {
+                    return farRightChild.search(data);
+                }
+            }
+        } else if (xKey == null && zKey != null) {
+            if (data.compareTo(yKey) < 0) {
+                if (farLeftChild != null) {
+                    return farLeftChild.search(data);
+                } else if (leftChild != null) {
+                    return leftChild.search(data);
+                }
+            } else if (data.compareTo(zKey) < 0 && rightChild != null) {
+                return rightChild.search(data);
+            } else if (data.compareTo(zKey) >= 0 && farRightChild != null) {
+                farRightChild.search(data);
+            }
         }
         return false;
     }

@@ -4,12 +4,12 @@ public class TwoThreeTree<T extends Comparable<T>> {
 
     private Node<T> root;
 
-    public TwoThreeTree(T data) {
-        this.root = new Node(data);
-    }
-
     public void insert(T data) {
-        root = root.insert(data);
+        if (root == null) {
+            root = new Node(data);
+        } else {
+            root = root.insert(data);            
+        }
     }
 
     public String search(T data) {
