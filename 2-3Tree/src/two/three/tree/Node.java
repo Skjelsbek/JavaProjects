@@ -18,7 +18,6 @@ public class Node<T extends Comparable<T>> {
                     this.farLeftChild = tmpNode.farLeftChild;
                     this.leftChild = tmpNode.farRightChild;
                 }
-
             } else if (farRightChild != null && data.compareTo(yKey) >= 0) {
                 tmpNode = farRightChild.insert(data);
                 if (tmpNode != farRightChild) {
@@ -26,7 +25,6 @@ public class Node<T extends Comparable<T>> {
                     farRightChild = tmpNode.farRightChild;
                     rightChild = tmpNode.farLeftChild;
                 }
-
             } else if (data.compareTo(yKey) < 0) {
                 xKey = data;
             } else {
@@ -49,9 +47,7 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.leftChild = tmpNode.farRightChild;
                 }
-
             } else if (leftChild != null && data.compareTo(xKey) >= 0 && data.compareTo(yKey) < 0) {
-
                 tmpNode = leftChild.insert(data);
                 if (tmpNode != leftChild) {
                     zKey = yKey;
@@ -63,7 +59,6 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.rightChild = tmpNode.farRightChild;
                 }
-
             } else if (farRightChild != null && data.compareTo(yKey) >= 0) {
                 tmpNode = farRightChild.insert(data);
                 if (tmpNode != farRightChild) {
@@ -78,7 +73,6 @@ public class Node<T extends Comparable<T>> {
                     }
                     this.rightChild = tmpNode.farLeftChild;
                 }
-
             } else if (data.compareTo(yKey) < 0) {
                 if (data.compareTo(xKey) >= 0) {
                     zKey = yKey;
@@ -191,7 +185,7 @@ public class Node<T extends Comparable<T>> {
     }
 
     public boolean search(T data) {
-        if (yKey == data) {
+        if (yKey == data) {            
             return true;
         } else if (xKey == data) {
             return true;
@@ -203,29 +197,21 @@ public class Node<T extends Comparable<T>> {
             } else if (data.compareTo(yKey) >= 0 && farRightChild != null) {
                 return farRightChild.search(data);
             }
-        } else if (xKey != null && zKey == null) {
+        } else if (xKey != null) {
             if (data.compareTo(xKey) < 0 && farLeftChild != null) {
                 return farLeftChild.search(data);
             } else if (data.compareTo(yKey) < 0 && leftChild != null) {
                 return leftChild.search(data);
-            } else if (data.compareTo(yKey) >= 0) {
-                if (rightChild != null) {
-                    return rightChild.search(data);
-                } else if (farRightChild != null) {
-                    return farRightChild.search(data);
-                }
+            } else if (data.compareTo(yKey) >= 0 && farRightChild != null) {
+                return farRightChild.search(data);
             }
-        } else if (xKey == null && zKey != null) {
-            if (data.compareTo(yKey) < 0) {
-                if (farLeftChild != null) {
-                    return farLeftChild.search(data);
-                } else if (leftChild != null) {
-                    return leftChild.search(data);
-                }
+        } else if (zKey != null) {
+            if (data.compareTo(yKey) < 0 && farLeftChild != null) {
+                return farLeftChild.search(data);
             } else if (data.compareTo(zKey) < 0 && rightChild != null) {
                 return rightChild.search(data);
-            } else if (data.compareTo(zKey) >= 0 && farRightChild != null) {
-                farRightChild.search(data);
+            } else if (data.compareTo(zKey) >= 0 && farRightChild != null) {                
+                return farRightChild.search(data);
             }
         }
         return false;

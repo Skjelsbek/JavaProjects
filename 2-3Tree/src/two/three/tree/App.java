@@ -5,7 +5,7 @@ import java.util.Random;
 public class App {
 
     public static void main(String[] args) {
-        // Nødvendige objekter
+        // Instansierer Random og TwoThreeTree objekter
         Random rnd = new Random();
         TwoThreeTree<Integer> ttt = new TwoThreeTree();
         
@@ -13,17 +13,20 @@ public class App {
         System.out.println(ttt.search(rnd.nextInt(100) + 1));
         ttt.infix();
         
-        // Setter inn 10 tilfeldige verdier mellom 1 og 100
+        // Setter inn 10 tilfeldige verdier mellom 1 og 100        
+        System.out.println("\nSetter inn i følgende rekkefølge:");
+        int tmp;
         for (int i = 0; i < 10; i++) {
-            ttt.insert(rnd.nextInt(100) + 1);
+            tmp = rnd.nextInt(100) + 1;
+            System.out.println(tmp);
+            ttt.insert(tmp);
         }
         
-        // Traverserer
+        // Traverserer inorder
         System.out.println("\nTraversering: ");
         ttt.infix();
         
-        // Søker etter alle tall mellom 1 og 100
-        // Det er ett tilfelle hvor det ikke funker som det skal!
+        // Søker i treet etter alle tall mellom 1 og 100
         System.out.println("\nSearching:");
         for (int i = 1; i <= 100; i++) {
             System.out.println(ttt.search(i));
