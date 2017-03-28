@@ -5,6 +5,8 @@
         <group>
             <file>file:/D:/Java_Projects/Graph/src/graph/Hashmap.java</file>
             <file>file:/D:/Java_Projects/Graph/src/graph/Node.java</file>
+            <file>file:/D:/Java_Projects/Graph/src/graph/Graph.java</file>
+            <file>file:/D:/Java_Projects/Graph/src/graph/Edge.java</file>
             <file>file:/D:/Java_Projects/Graph/src/graph/App.java</file>
         </group>
     </open-files>

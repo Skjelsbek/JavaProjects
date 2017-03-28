@@ -3,6 +3,7 @@ package graph;
 public class Node <TKey, TValue>{
     TKey key;
     TValue data;
+    Edge edges;
     Node<TKey, TValue> nextNode;
     
     public Node (TKey key, TValue data) {
@@ -31,6 +32,9 @@ public class Node <TKey, TValue>{
     public void delete(TKey key) {
         if (nextNode != null) {
             if (nextNode.key == key) {
+                if (nextNode.edges != null) {
+                    nextNode.edges.deleteEdges(key);                    
+                }
                 nextNode = null;
             } else {
                 nextNode.delete(key);
@@ -38,7 +42,7 @@ public class Node <TKey, TValue>{
         } else if (nextNode == null) {
             System.out.println("There's no such key to be found!");
         }
-    }
+    }        
     
     @Override
     public String toString() {
