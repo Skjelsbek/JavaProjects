@@ -1,6 +1,6 @@
 package graph;
 
-public class Edge<TKey extends Comparable, TValue> {
+public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<Edge<TKey, TValue>>{
     Node<TKey, TValue> reference;   // Refrence to the node wich the edge is attached to
     private byte weight;    // The weight of the edge
     Edge nextEdge;  // The next edge wich originates from the same node
@@ -12,11 +12,16 @@ public class Edge<TKey extends Comparable, TValue> {
     }
     
     // Inserts the selected edge
-    public void insertEdge(Node node, byte weight) {
+    public void insertEdge(Node<TKey, TValue> from, Node<TKey, TValue> to, byte weight) {
         if (nextEdge == null) {
-            nextEdge = new Edge(node, weight);
+            nextEdge = new Edge(to, weight);
         } else {
-            nextEdge.insertEdge(node, weight);
+            Edge tmp = new Edge(to, weight);
+            if (nextEdge.equals(tmp)) {
+                System.out.println("There is already an edge between " + from + " and " + to);
+            } else {
+                nextEdge.insertEdge(from, to, weight);                
+            }
         }
     }
     
@@ -41,11 +46,36 @@ public class Edge<TKey extends Comparable, TValue> {
         }        
     }
     
+    public Node<TKey, TValue> getRefrence() {
+        return this.reference;
+    }
+    
+    public byte getWeight() {
+        return this.weight;
+    }
+    public boolean equals(Edge e) {
+        if (this.reference.compareTo(e.reference) == 0) {
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public String toString() {
         if (nextEdge == null) {
             return reference.toString();
         }
-        return reference.toString() + nextEdge.toString();
+        return reference.toString() + ", " + nextEdge.toString();
+    }
+
+    @Override
+    public int compareTo(Edge<TKey, TValue> e) {
+        if (this.weight < e.weight) {
+            return -1;
+        }
+        if (this.weight > e.weight) {
+            return 1;
+        }
+        return 0;
     }
 }

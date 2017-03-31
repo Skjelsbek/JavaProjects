@@ -1,6 +1,6 @@
 package graph;
 
-public class Node<TKey extends Comparable, TValue> {
+public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<Node<TKey, TValue>>{
     TKey key;   // The key which the hash map uses to find the node with the associated data
     TValue data;    // What we actually wanna store in the node
     private boolean visited;    // A variable that determines if the node has been visited before
@@ -35,7 +35,12 @@ public class Node<TKey extends Comparable, TValue> {
             if (this.edges == null) {
                 this.edges = new Edge(to, weight);
             } else {
-                this.edges.insertEdge(to, weight);
+                Edge tmp = new Edge (to, weight);
+                if (this.edges.equals(tmp)) {
+                    System.out.println("There is already an edge between " + getNode(from) + " and " + to);
+                } else {
+                    this.edges.insertEdge(getNode(from), to, weight);                    
+                }
             }
         } else if (nextNode != null) {
             nextNode.insertEdge(from, to, weight);
@@ -97,12 +102,12 @@ public class Node<TKey extends Comparable, TValue> {
             if (this.edges != null) {
                 return this.edges.toString();                
             } else {
-                return "There is no such node!";
+                return "";
             }
         } else if (nextNode != null) {
             nextNode.getEdges(key);
         }
-        return "There is no such node!";
+        return "";
     }
     
     // Sets the visited boolean true
@@ -118,20 +123,11 @@ public class Node<TKey extends Comparable, TValue> {
     // toString-function which prints all the values in the linkedlist
     @Override
     public String toString() {
-        if (nextNode == null) {
-            return data.toString();
-        }
-        return data.toString() + " , " + nextNode.toString();
+        return data.toString();
     }
     
     // Used to determine which edge that should be removed
-    public int compareTo(Node n) {
-        if (this.key.compareTo(n.key) < 0) {
-            return -1;
-        }
-        if (this.key.compareTo(n.key) > 0) {
-            return 1;
-        }
-        return 0;
+    public int compareTo(Node<TKey, TValue> n) {
+        return this.key.compareTo(n.key);
     }
 }
