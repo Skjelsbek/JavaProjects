@@ -26,6 +26,9 @@ public class Graph {
         hm.insertEdge("G", "I", (byte) 2);
         hm.insertEdge("H", "I", (byte) 1);
         
-        System.out.println(hm);        
+        System.out.println(hm);
+        
+        Hashmap hm2 = hm.prim("A");
+        System.out.println(hm2);
     }
 }

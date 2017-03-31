@@ -29,8 +29,8 @@ public class Hashmap<TKey extends Comparable<TKey>, TValue> {
         if (fromNode == null || toNode == null) {
             System.out.println("Node with matching key not found!");
         } else {
-            fromNode.insertEdge(from, toNode, weight);
-            toNode.insertEdge(to, fromNode, weight);
+            fromNode.insertEdge(fromNode, toNode, weight);
+            toNode.insertEdge(toNode, fromNode, weight);
         }
     }
 
@@ -38,13 +38,13 @@ public class Hashmap<TKey extends Comparable<TKey>, TValue> {
     public void deleteNode(TKey key) {
         int arrayIndex = getIndex(key);
         if (array[arrayIndex] != null) {
-            if (array[arrayIndex].key == key) {
-                if (array[arrayIndex].edges != null) {
-                    array[arrayIndex].edges.deleteEdges(array[arrayIndex]);
+            if (array[arrayIndex].getKey() == key) {
+                if (array[arrayIndex].getEdges() != null) {
+                    array[arrayIndex].getEdges().deleteEdges(array[arrayIndex]);
                 }
-                array[arrayIndex] = array[arrayIndex].nextNode;
+                array[arrayIndex] = array[arrayIndex].getNextNode();
                 return;
-            } else if (array[arrayIndex].nextNode != null) {
+            } else if (array[arrayIndex].getNextNode() != null) {
                 array[arrayIndex].deleteNode(key);
                 return;
             }
@@ -81,42 +81,42 @@ public class Hashmap<TKey extends Comparable<TKey>, TValue> {
 
         // CREATING QUEUE
         int i;
-        Edge current = n.edges;
+        Edge current = n.getEdges();
         while (current != null) {
             i = 0;
             while (queue.get(i) != null && current.compareTo(queue.get(i)) > 0) {
                 i++;
             }
             queue.add(i, current);
-            current = current.nextEdge;
+            current = current.getNextEdge();
         }
 
         //ADDING NODE
-        mst.insertNode(n.key, n.data);
-        mst.insertNode(queue.get(0).getRefrence().key, queue.get(0).getRefrence().data);
-        mst.insertEdge(n.key, queue.get(0).getRefrence().key, queue.get(0).getWeight());
+        mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
+        mst.insertNode(queue.get(0).getTo().getKey(), queue.get(0).getTo().getValue());
+        mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
         n.setVisited();
-        n = queue.get(0).getRefrence();
+        n = queue.get(0).getTo();
         queue.remove(0);
 
         while (!queue.isEmpty()) {
             // CREATING QUEUE
-            current = n.edges;
+            current = n.getEdges();
             while (current != null) {
                 i = 0;
                 while (queue.get(i) != null && current.compareTo(queue.get(i)) > 0) {
                     i++;
                 }
                 queue.add(i, current);
-                current = current.nextEdge;
+                current = current.getNextEdge();
             }
 
             //ADDING NODE
-            mst.insertNode(n.key, n.data);
-            mst.insertNode(queue.get(0).getRefrence().key, queue.get(0).getRefrence().data);
-            mst.insertEdge(n.key, queue.get(0).getRefrence().key, queue.get(0).getWeight());
+            mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
+            mst.insertNode(queue.get(0).getTo().getKey(), queue.get(0).getTo().getValue());
+            mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
             n.setVisited();
-            n = queue.get(0).getRefrence();
+            n = queue.get(0).getTo();
             queue.remove(0);
         }
         return mst;
@@ -136,8 +136,8 @@ public class Hashmap<TKey extends Comparable<TKey>, TValue> {
         for (Node n : array) {
             Node temp = n;
             while (temp != null) {
-                s += index + "\t" + temp.toString() + "   ->\t" + temp.getEdges(temp.key).toString() + "\n";
-                temp = temp.nextNode;
+                s += index + "\t" + temp.toString() + "   ->\t" + temp.getEdges(temp.getKey()).toString() + "\n";
+                temp = temp.getNextNode();
             }
             index++;
         }

@@ -1,11 +1,11 @@
 package graph;
 
 public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<Node<TKey, TValue>>{
-    TKey key;   // The key which the hash map uses to find the node with the associated data
-    TValue data;    // What we actually wanna store in the node
+    private TKey key;   // The key which the hash map uses to find the node with the associated data
+    private TValue data;    // What we actually wanna store in the node
     private boolean visited;    // A variable that determines if the node has been visited before
-    Edge<TKey, TValue> edges;   // A variable which stores all the edges that originates from the node
-    Node<TKey, TValue> nextNode;    // The next node on the same index in the hash map
+    private Edge<TKey, TValue> edges;   // A variable which stores all the edges that originates from the node
+    private Node<TKey, TValue> nextNode;    // The next node on the same index in the hash map
     
     // Constructor which takes a key and a value in it's parameter and sets its instance variables accordingly
     public Node(TKey key, TValue data) {
@@ -30,16 +30,16 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
     *   Inserts an edge from the node with the matching key, and passing
     *   the refrence node and it's weight to the edge constructor
     */
-    public void insertEdge(TKey from, Node to, byte weight) {
-        if (this.key == from) {
+    public void insertEdge(Node from, Node to, byte weight) {
+        if (this.key == from.getKey()) {
             if (this.edges == null) {
-                this.edges = new Edge(to, weight);
+                this.edges = new Edge(from, to, weight);
             } else {
-                Edge tmp = new Edge (to, weight);
+                Edge tmp = new Edge (from, to, weight);
                 if (this.edges.equals(tmp)) {
-                    System.out.println("There is already an edge between " + getNode(from) + " and " + to);
+                    System.out.println("There is already an edge between " + from + " and " + to);
                 } else {
-                    this.edges.insertEdge(getNode(from), to, weight);                    
+                    this.edges.insertEdge(from, to, weight);                    
                 }
             }
         } else if (nextNode != null) {
@@ -71,8 +71,8 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
     public void deleteEdge(TKey from, Node to) {
         if (this.key.compareTo(from) == 0) {
             if (edges != null) {
-                if (edges.reference.compareTo(to) == 0) {
-                    edges = edges.nextEdge;
+                if (edges.getTo().compareTo(to) == 0) {
+                    edges = edges.getNextEdge();
                 } else {
                     edges.deleteEdge(to);
                 }                
@@ -95,6 +95,21 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
             return nextNode.getNode(key);
         }
         return null;
+    }
+    
+    public TKey getKey() {
+        return this.key;
+    }
+    
+    public TValue getValue() {
+        return this.data;
+    }
+    public Node<TKey, TValue> getNextNode() {
+        return this.nextNode;
+    }
+    
+    public Edge getEdges() {
+        return this.edges;
     }
     
     public String getEdges(TKey key) {
