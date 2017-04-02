@@ -4,7 +4,7 @@ public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<E
     private Node<TKey, TValue> from; // Refrence to the node wich the edge goes from 
     private Node<TKey, TValue> to;   // Refrence to the node wich the edge goes to
     private byte weight;    // The weight of the edge
-    private Edge nextEdge;  // The next edge wich originates from the same node
+    private Edge<TKey, TValue> nextEdge;  // The next edge wich originates from the same node
     
     // Constructor which takes a node and a weight in it's parameter and sets its instance variables accordingly
     public Edge(Node from, Node to, byte weight) {
@@ -60,7 +60,7 @@ public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<E
         return this.weight;
     }
     
-    public Edge getNextEdge() {
+    public Edge<TKey, TValue> getNextEdge() {
         return this.nextEdge;
     }
     

@@ -1,34 +1,163 @@
 package graph;
 
-public class Graph {
+import java.util.ArrayList;
 
-    public static void main(String[] args) {
-        Hashmap<String, String> hm = new Hashmap(8);
+public class Graph<TKey extends Comparable<TKey>, TValue> {
 
-        String[] array = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-        for (int i = 0; i < 10; i++) {
-            hm.insertNode(array[i], array[i]);
+    private Node<TKey, TValue>[] array; // Array to store linkedlist of nodes
+
+    // Constructor which decides the size of the array
+    public Graph(int size) {
+        array = new Node[size];
+    }
+
+    // Inserts a node in the hash map
+    public void insertNode(TKey key, TValue data) {
+        int arrayIndex = getIndex(key);
+        if (array[arrayIndex] == null) {
+            array[arrayIndex] = new Node(key, data);
+        } else {
+            array[arrayIndex].insertNode(key, data);
         }
-        
-        hm.insertEdge("A", "B", (byte) 2);
-        hm.insertEdge("A", "D", (byte) 3);
-        hm.insertEdge("A", "E", (byte) 1);
-        hm.insertEdge("B", "J", (byte) 4);
-        hm.insertEdge("B", "C", (byte) 2);
-        hm.insertEdge("B", "E", (byte) 2);
-        hm.insertEdge("C", "J", (byte) 3);
-        hm.insertEdge("C", "F", (byte) 5);
-        hm.insertEdge("D", "G", (byte) 4);
-        hm.insertEdge("E", "G", (byte) 1);
-        hm.insertEdge("E", "F", (byte) 3);
-        hm.insertEdge("E", "H", (byte) 4);
-        hm.insertEdge("F", "H", (byte) 3);
-        hm.insertEdge("G", "I", (byte) 2);
-        hm.insertEdge("H", "I", (byte) 1);
-        
-        System.out.println(hm);
-        
-        Hashmap hm2 = hm.prim("A");
-        System.out.println(hm2);
+    }
+
+    // Takes two keys(from and to) and the weight of the edge, and inserts the edge at the correct place with the correct weight
+    public void insertEdge(TKey from, TKey to, byte weight) {
+        Node fromNode = getNode(from);
+        Node toNode = getNode(to);
+
+        if (fromNode == null || toNode == null) {
+            System.out.println("Node with matching key not found!");
+        } else {
+            fromNode.insertEdge(fromNode, toNode, weight);
+            toNode.insertEdge(toNode, fromNode, weight);
+        }
+    }
+
+    // Deletes the passed node, and also removes all the edges linked to it
+    public void deleteNode(TKey key) {
+        int arrayIndex = getIndex(key);
+        if (array[arrayIndex] != null) {
+            if (array[arrayIndex].getKey() == key) {
+                if (array[arrayIndex].getEdges() != null) {
+                    array[arrayIndex].getEdges().deleteEdges(array[arrayIndex]);
+                }
+                array[arrayIndex] = array[arrayIndex].getNextNode();
+                return;
+            } else if (array[arrayIndex].getNextNode() != null) {
+                array[arrayIndex].deleteNode(key);
+                return;
+            }
+        }
+        System.out.println("Key not found!");
+    }
+
+    // Deletes a single edge
+    public void deleteEdge(TKey from, TKey to) {
+        Node fromNode = getNode(from);
+        Node toNode = getNode(to);
+
+        if (fromNode == null || toNode == null) {
+            System.out.println("Node with matching key not found!");
+        } else {
+            fromNode.deleteEdge(from, toNode);
+            toNode.deleteEdge(to, fromNode);
+        }
+    }
+
+    // Get-function returning the whole node
+    private Node<TKey, TValue> getNode(TKey key) {
+        int arrayIndex = getIndex(key);
+        if (array[arrayIndex] != null) {
+            return array[arrayIndex].getNode(key);
+        }
+        return null;
+    }
+    
+    // Prim'a algorithm for finding the minimal spanning tree from the selected node
+    public Graph<TKey, TValue> prim(TKey key) {
+        Graph<TKey, TValue> mst = new Graph(this.array.length); // Minimal spanning tree
+        ArrayList<Edge<TKey, TValue>> queue = new ArrayList();  // ArrayList for storing and sorting edges
+        Node<TKey, TValue> n = getNode(key);    // Getting the node with the corresponding key
+        Edge<TKey, TValue> current = n.getEdges();  // Getting the edges
+        int index;  // Variable used for sorting the ArrayList
+
+        // ADDING TO QUEUE
+        while (current != null) {
+            index = 0;
+            // Incrementing the index to place the edge at the correct place in the ArrayList relative to the weight
+            while (index < queue.size() && current.compareTo(queue.get(index)) > 0) {
+                index++;
+            }
+            // Adding the edge and updating current to the next edge originating from the node
+            queue.add(index, new Edge(current.getFrom(), current.getTo(), current.getWeight()));
+            current = current.getNextEdge();
+        }
+
+        //ADDING NODE TO MST
+        mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
+        mst.insertNode(queue.get(0).getTo().getKey(), queue.get(0).getTo().getValue());
+        mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
+                
+        while (!queue.isEmpty()) {            
+            queue.get(0).getFrom().setVisited();    // Sets the node visited after it's added to MST
+            //queue.get(0).getTo().setVisited();
+            
+            // Deletes all the visited nodes from queue
+            while (!queue.isEmpty() && queue.get(0).getTo().isVisited()) {
+                queue.remove(0);
+            }
+            
+            // Updates n, breaks out of the outer while if the queue is empty after deleting visited nodes
+            if (!queue.isEmpty()) {
+                n = queue.get(0).getTo();
+            } else {
+                break;
+            }
+            
+            current = n.getEdges(); // Updates current
+            
+            // ADDING TO QUEUE
+            while (current != null) {
+                index = 0;
+                while (index < queue.size() && current.compareTo(queue.get(index)) > 0) {
+                    index++;
+                }
+                queue.add(index, new Edge(current.getFrom(), current.getTo(), current.getWeight()));
+                current = current.getNextEdge();
+            }
+            
+            //ADDING NODE TO MST
+            if (mst.getNode(queue.get(0).getFrom().getKey()) == null) {
+                mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
+            }
+            if (mst.getNode(queue.get(0).getTo().getKey()) == null) {                
+                mst.insertNode(queue.get(0).getTo().getKey(), queue.get(0).getTo().getValue());
+            }
+            mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
+        }
+        return mst;
+    }
+
+    // Returns the index of the array where the node should be placed
+    private int getIndex(TKey key) {
+        return (Math.abs(key.hashCode()) % array.length);
+    }
+
+    // toString-function which returns a string containing data from all the linked lists in the array
+    @Override
+    public String toString() {
+        String s = "Index\tNode\tEdges\n";
+        int index = 0;
+
+        for (Node n : array) {
+            Node temp = n;
+            while (temp != null) {
+                s += index + "\t" + temp.toString() + "   ->\t" + temp.getEdges(temp.getKey()).toString() + "\n";
+                temp = temp.getNextNode();
+            }
+            index++;
+        }
+        return s;
     }
 }

@@ -3,7 +3,7 @@ package graph;
 public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<Node<TKey, TValue>>{
     private TKey key;   // The key which the hash map uses to find the node with the associated data
     private TValue data;    // What we actually wanna store in the node
-    private boolean visited;    // A variable that determines if the node has been visited before
+    private boolean visited = false;    // A variable that determines if the node has been visited before
     private Edge<TKey, TValue> edges;   // A variable which stores all the edges that originates from the node
     private Node<TKey, TValue> nextNode;    // The next node on the same index in the hash map
     
@@ -132,7 +132,7 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
     
     // Checks if the node is already visited
     public boolean isVisited() {
-        return visited;
+        return this.visited;
     }
     
     // toString-function which prints all the values in the linkedlist
