@@ -27,12 +27,17 @@ public class App {
         System.out.println(graph);
         
         // Using prim's algorithm to generate minimal spanning tree, then print it
+        System.out.println("Generate MST from node A in graph");
         System.out.println("Some error messages because i have edges both ways between two nodes...");
         Graph hm2 = graph.prim("A");
         System.out.println("\nMinimal spanning tree from A:");
         System.out.println(hm2);
-                
         
-                
+        // Proving that resetVisited works
+        System.out.println("Generating another MST from the same node in graph to prove that resetVisited-function works");
+        System.out.println("Some error messages because i have edges both ways between two nodes...");
+        Graph hm3 = graph.prim("A");
+        System.out.println("\nMinimal spanning tree from A:");
+        System.out.println(hm3);                        
     }
 }

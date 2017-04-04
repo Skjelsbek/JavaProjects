@@ -1,12 +1,12 @@
 package graph;
 
-public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<Edge<TKey, TValue>>{
+public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<Edge<TKey, TValue>> {
     private Node<TKey, TValue> from; // Refrence to the node wich the edge goes from 
     private Node<TKey, TValue> to;   // Refrence to the node wich the edge goes to
     private byte weight;    // The weight of the edge
     private Edge<TKey, TValue> nextEdge;  // The next edge wich originates from the same node
     
-    // Constructor which takes a node and a weight in it's parameter and sets its instance variables accordingly
+    // Constructor which sets its instance variables according to the parameter
     public Edge(Node from, Node to, byte weight) {
         this.to = to;
         this.from = from;
@@ -27,7 +27,7 @@ public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<E
         }
     }
     
-    // Delete single edge
+    // Delete selected edge
     public void deleteEdge(Node n) {
         if (nextEdge != null) {            
             if (nextEdge.to.compareTo(n) == 0) {
@@ -69,7 +69,7 @@ public class Edge<TKey extends Comparable<TKey>, TValue> implements Comparable<E
             return true;
         }
         return false;
-    }
+    } 
     
     @Override
     public String toString() {

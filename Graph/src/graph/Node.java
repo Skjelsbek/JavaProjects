@@ -14,10 +14,7 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
         this. visited = false;
     }
     
-    /*
-    *   If there already is a node at the index which it is to be placed
-    *   we place it further down in the linked list
-    */
+    // If there's already a node at the index, we place it further down in the linked list
     public void insertNode(TKey key, TValue data) {
         if (nextNode == null) {
             nextNode = new Node(key, data);
@@ -27,8 +24,9 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
     }
     
     /*
-    *   Inserts an edge from the node with the matching key, and passing
-    *   the refrence node and it's weight to the edge constructor
+    *   Inserts an edge at the correct place in the linked list of edges.
+    *   If there's already a corresponding edge in the linked list, it print's an error message.
+    *   The edge created contains both the node it originates from and the one it goes to, aswell as the weight.
     */
     public void insertEdge(Node from, Node to, byte weight) {
         if (this.key == from.getKey()) {
@@ -112,6 +110,7 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
         return this.edges;
     }
     
+    // Overloads the getEdges-function above and it returns a string insted of the edges linked list
     public String getEdges(TKey key) {
         if (key == this.key) {
             if (this.edges != null) {
@@ -126,8 +125,12 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
     }
     
     // Sets the visited boolean true
-    public void setVisited() {
-        this.visited = true;
+    public void setVisited(boolean b) {
+        if (b) {
+            this.visited = true;            
+        } else {
+            this.visited = false;
+        }
     }
     
     // Checks if the node is already visited
@@ -135,13 +138,25 @@ public class Node<TKey extends Comparable<TKey>, TValue> implements Comparable<N
         return this.visited;
     }
     
-    // toString-function which prints all the values in the linkedlist
+    // Sets the visited variable of all the nodes in the linked list to false
+    public void resetVisited() {
+        setVisited(false);
+        
+        if (this.nextNode == null) {
+            return;
+        }
+        
+        nextNode.resetVisited();
+    }
+    
+    // toString-function which returns the data variable
     @Override
     public String toString() {
         return data.toString();
     }
     
     // Used to determine which edge that should be removed
+    @Override
     public int compareTo(Node<TKey, TValue> n) {
         return this.key.compareTo(n.key);
     }

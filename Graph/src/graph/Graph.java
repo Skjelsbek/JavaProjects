@@ -11,7 +11,7 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
         array = new Node[size];
     }
 
-    // Inserts a node in the hash map
+    // Inserts a node in the graph
     public void insertNode(TKey key, TValue data) {
         int arrayIndex = getIndex(key);
         if (array[arrayIndex] == null) {
@@ -65,7 +65,7 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
         }
     }
 
-    // Get-function returning the whole node
+    // Get-function returning the node with the matching key
     private Node<TKey, TValue> getNode(TKey key) {
         int arrayIndex = getIndex(key);
         if (array[arrayIndex] != null) {
@@ -77,12 +77,12 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
     // Prim'a algorithm for finding the minimal spanning tree from the selected node
     public Graph<TKey, TValue> prim(TKey key) {
         Graph<TKey, TValue> mst = new Graph(this.array.length); // Minimal spanning tree
-        ArrayList<Edge<TKey, TValue>> queue = new ArrayList();  // ArrayList for storing and sorting edges
-        Node<TKey, TValue> n = getNode(key);    // Getting the node with the corresponding key
-        Edge<TKey, TValue> current = n.getEdges();  // Getting the edges
+        ArrayList<Edge<TKey, TValue>> queue = new ArrayList();  // ArrayList for storing edges
+        Node<TKey, TValue> n = getNode(key);    // Getting the node with the matching key
+        Edge<TKey, TValue> current = n.getEdges();  // Getting edges
         int index;  // Variable used for sorting the ArrayList
 
-        // ADDING TO QUEUE
+        // Adding to queue
         while (current != null) {
             index = 0;
             // Incrementing the index to place the edge at the correct place in the ArrayList relative to the weight
@@ -94,14 +94,14 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
             current = current.getNextEdge();
         }
 
-        //ADDING NODE TO MST
+        // Adding nodes with edge between them to MST
         mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
         mst.insertNode(queue.get(0).getTo().getKey(), queue.get(0).getTo().getValue());
         mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
-                
+        
+        // Doing the same thing for the rest of the nodes until the queue is empty
         while (!queue.isEmpty()) {            
-            queue.get(0).getFrom().setVisited();    // Sets the node visited after it's added to MST
-            //queue.get(0).getTo().setVisited();
+            queue.get(0).getFrom().setVisited(true);    // Sets the node visited after it's added to MST
             
             // Deletes all the visited nodes from queue
             while (!queue.isEmpty() && queue.get(0).getTo().isVisited()) {
@@ -117,7 +117,7 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
             
             current = n.getEdges(); // Updates current
             
-            // ADDING TO QUEUE
+            // Adding to queue
             while (current != null) {
                 index = 0;
                 while (index < queue.size() && current.compareTo(queue.get(index)) > 0) {
@@ -127,7 +127,7 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
                 current = current.getNextEdge();
             }
             
-            //ADDING NODE TO MST
+            // Adding nodes with edge between them to MST
             if (mst.getNode(queue.get(0).getFrom().getKey()) == null) {
                 mst.insertNode(queue.get(0).getFrom().getKey(), queue.get(0).getFrom().getValue());
             }
@@ -136,10 +136,20 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
             }
             mst.insertEdge(queue.get(0).getFrom().getKey(), queue.get(0).getTo().getKey(), queue.get(0).getWeight());
         }
-        return mst;
+        this.resetVisited();    // Resets the visited variable of all the nodes in the original graph
+        return mst; // Returning MST
     }
-
-    // Returns the index of the array where the node should be placed
+    
+    // Resets the visited variable of all nodes
+    public void resetVisited() {
+        for (Node n : array) {
+            if (n != null) {
+                n.resetVisited();
+            }            
+        }
+    }
+    
+    // Returns the index of the array where the node should be placed / can be found
     private int getIndex(TKey key) {
         return (Math.abs(key.hashCode()) % array.length);
     }
@@ -153,7 +163,7 @@ public class Graph<TKey extends Comparable<TKey>, TValue> {
         for (Node n : array) {
             Node temp = n;
             while (temp != null) {
-                s += index + "\t" + temp.toString() + "   ->\t" + temp.getEdges(temp.getKey()).toString() + "\n";
+                s += index + "\t" + temp.toString() + "   ->\t" + temp.getEdges(temp.getKey()) + "\n";
                 temp = temp.getNextNode();
             }
             index++;
