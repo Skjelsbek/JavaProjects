@@ -7,7 +7,7 @@ public class StringMathWorkInProgress {
         //double test = Math.pow((2+4*2/8-2), 2) ;
         //System.out.println(test);
 
-        System.out.println(topLayerAlgorithm("2^2(-2+2*2--2^-3)^2/2")); // Testing the algorithm.                    
+        System.out.println(topLayerAlgorithm("2^2(-(2+2)*2--2^-3)^2/2")); // Testing the algorithm.                    
     } // End main   
 
     private static String topLayerAlgorithm(String calculation) {
