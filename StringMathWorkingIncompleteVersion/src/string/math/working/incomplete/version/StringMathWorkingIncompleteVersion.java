@@ -3,7 +3,7 @@ package string.math.working.incomplete.version;
 public class StringMathWorkingIncompleteVersion {
 
     public static void main(String[] args) {
-        System.out.println(algorithm("4*3+(4+(2/2)/2)")); // Testing the algorithm.                    
+        System.out.println(algorithm("4+5+(7+4)*3+4*4+9/3+4*12–3/4")); // Testing the algorithm.                    
     } // End main
 
     private static String algorithm(String calculation) {
